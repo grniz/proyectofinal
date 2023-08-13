@@ -1,0 +1,30 @@
+{{#each productos}}
+    <p>{{this.title}}</p>
+{{/each}}
+
+<form id="productForm">
+    <label>"titulo"</label>
+    <input id="title" type="text">
+    <br>
+    <label>"descripcion"</label>
+    <input id="description" type="text">
+    <br>
+    <label>"precio"</label>
+    <input id="price" type="number">
+    <br>
+    <label>"thumbnails"</label>
+    <input id="thumbnails" type="text">
+    <br>
+    <label>"code"</label>
+    <input id="code" type="text">
+    <br>
+    <label>"stock"</label>
+    <input id="stock" type="number">
+    <br>
+    <label>"categoria"</label>
+    <input id="category" type="text">
+    <br>
+    <input type="submit" value="Enviar"/>
+</form>
+
+<script src="/js/script.js"></script>
