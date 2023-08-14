@@ -1,7 +1,7 @@
 import cartProductModel from "../models/cartProducts.model.js";
 
 export default class CartProduct{
-    async createCartProduct(CartProduct){
+    async createCartProduct(cartProduct){
         let result = await cartProductModel.create(cartProduct);
         return result;
     }

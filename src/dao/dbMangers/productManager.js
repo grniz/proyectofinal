@@ -7,7 +7,7 @@ export default class Products{
         return response;
     }
     async findProductById(id){
-        let response = await productsModel.find(id);
+        let response = await productsModel.find(id).lean();
         return response;
     }
 

@@ -6,8 +6,8 @@ export default class Carts{
         let response = await cartsModels.find().lean();
         return response;
     }
-    async findCartById(id){
-        let response = await cartsModels.find(id).lean();
+    async findCartById(_id){
+        let response = await cartsModels.findById(_id).lean();
         return response;
     }
 

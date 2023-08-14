@@ -1,30 +1,23 @@
-{{#each productos}}
-    <p>{{this.title}}</p>
+<h1>Lista de productos</h1>
+{{#each products}}
+    <p>producto: {{this.title}}</p>
+    <p>descripcion: {{this.description}}</p>
+    <p>precio: {{this.price}}</p>
+    <p>imagen: {{this.thumbnails}}</p>
+    <p>codigo: {{this.code}}</p>
+    <p>stock: {{this.stock}}</p>
+    <p>categoria: {{this.Category}}</p>
+    <button type="button" onclick="addToCart('{{this._id}}')">agregar al carrito</button>
+    <br>
 {{/each}}
+{{#if hasPrevPage}}
+    <a href="/api/products?page={{prevPage}}"><button>Anterior</button></a>
+  {{/if}}
 
-<form id="productForm">
-    <label>"titulo"</label>
-    <input id="title" type="text">
-    <br>
-    <label>"descripcion"</label>
-    <input id="description" type="text">
-    <br>
-    <label>"precio"</label>
-    <input id="price" type="number">
-    <br>
-    <label>"thumbnails"</label>
-    <input id="thumbnails" type="text">
-    <br>
-    <label>"code"</label>
-    <input id="code" type="text">
-    <br>
-    <label>"stock"</label>
-    <input id="stock" type="number">
-    <br>
-    <label>"categoria"</label>
-    <input id="category" type="text">
-    <br>
-    <input type="submit" value="Enviar"/>
-</form>
+  {{#if hasNextPage}}
+    <a href="/api/products?page={{nextPage}}"><button>Siguiente</button></a>
+  {{/if}}
+</div>
 
-<script src="/js/script.js"></script>
+<script src="/public/js/script.js"></script>
+

@@ -1,24 +1,25 @@
 import { Router } from "express";
 import Products from "../dao/dbMangers/productManager.js";
+import productsModel from "../dao/models/products.model.js";
 
 const router = Router();
 const productManager = new Products();
 
 // Metodo GET para obtener todos los productos
 router.get("/", async (req, res) => {
-    const { limit } = req.query;
-    try {
-      const response = await productManager.findProducts();
-      if (limit) {
-        let tempArray = response.slice(0, limit);
-        res.render("productos", { products: tempArray });
-      } else {
-        res.render("productos", { products: response });
-      }
-    } catch (err) {
-      res.render({ message: "Error al obtener los productos", data: err });
-    }
+  const { page =1 } = req.query;
+
+  const { docs, hasPrevPage, hasNextPage, nextPage, prevPage } =
+    await productsModel.paginate({}, { limit: 5, page, lean: true });
+  const products = docs;
+  res.render("products", {
+    products,
+    hasPrevPage,
+    hasNextPage,
+    prevPage,
+    nextPage,
   });
+});
 
 // Metodo GetById muestra el producto segun el id
 

@@ -6,7 +6,7 @@ const cartProductManager = new CartProduct();
 
 // metodo Post para agregar productos al carrito
 router.post("/", async (req, res) => {
-    const { id, quantity } = req.body;
+    const { id, quantity } = req.body;  
     let newCartProduct = {
       id: id,
       quantity: quantity,
