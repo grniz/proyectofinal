@@ -1,5 +1,11 @@
-<h1>Lista de productos</h1>
-{{#each products}}
+<h1 class="title-home">Productos</h1>
+<a href="" id="cerrarSesion">Cerrar Sesion</a>
+<p>Bienvenido {{nombre}} {{apellido}}</p>
+<p>Usuario: {{user}}</p>
+<p>Mail: {{mail}}</p>
+<p>Rol: {{rol}}</p>
+<div class="container-products">
+    {{#each products}}
     <p>producto: {{this.title}}</p>
     <p>descripcion: {{this.description}}</p>
     <p>precio: {{this.price}}</p>
@@ -9,7 +15,8 @@
     <p>categoria: {{this.Category}}</p>
     <button type="button" onclick="addToCart('{{this._id}}')">agregar al carrito</button>
     <br>
-{{/each}}
+    {{/each}}
+</div>
 {{#if hasPrevPage}}
     <a href="/api/products?page={{prevPage}}"><button>Anterior</button></a>
   {{/if}}
@@ -18,6 +25,3 @@
     <a href="/api/products?page={{nextPage}}"><button>Siguiente</button></a>
   {{/if}}
 </div>
-
-<script src="/public/js/script.js"></script>
-

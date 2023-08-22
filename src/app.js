@@ -9,6 +9,14 @@ import cartProductRouter from "./routes/cartProduct.router.js";
 // dotenv
 import * as dotenv from "dotenv";
 
+import MongoStore from "connect-mongo";
+import session from "express-session";
+import sessionRouter from "./routes/sessions.router.js"
+import loginRouter from "./routes/login.router.js"
+import signupRouter from "./routes/signup.router.js"
+
+
+
 dotenv.config();
 
 // Variables de entorno
@@ -21,6 +29,31 @@ const MONGO_URI = process.env.MONGO_URI;
 
 // Conexión a la base de datos
 const connection = mongoose.connect(MONGO_URI);
+// conexion con la sesion de mongo
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl: MONGO_URI,
+      mongoOptions: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+      ttl: 30,
+    }),
+    secret: "P1r4t3S3cr3t",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+
+function auth(req,res,next){
+  if(req.session.rol){
+      return next()
+  }else{
+      res.send("Error")
+  }
+}
 
 connection
   .then(() => {
@@ -41,7 +74,11 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//rutas
 app.use("/api/products/", productRouter);
 app.use("/api/carts/", cartRouter);
 app.use("/api/cart/", cartProductRouter);
+app.use("/login", loginRouter);
+app.use("/signup", signupRouter);
+app.use("/api/session/", sessionRouter);
 
