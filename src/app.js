@@ -11,25 +11,28 @@ import * as dotenv from "dotenv";
 
 import MongoStore from "connect-mongo";
 import session from "express-session";
-import sessionRouter from "./routes/sessions.router.js"
+import SessionRoute from "./routes/sessions.router.js"
 import loginRouter from "./routes/login.router.js"
 import signupRouter from "./routes/signup.router.js"
+import ForgotRoute from "./routes/forgot.router.js"
+//passport
+import passport from "passport";
+import initializePassport from "./dao/config/passport.config.js";
+import cookieParser from "cookie-parser";
 
 
 
 dotenv.config();
-
-// Variables de entorno
 const app = express();
-const PORT = process.env.PORT || 8080;
-const httpServer = app.listen(PORT, () => {
-  console.log(`Servidor escuchando desde el puerto ${PORT}`);
-});
-const MONGO_URI = process.env.MONGO_URI;
+app.use(cookieParser("P1r4t3S3cr3t"));
 
-// Conexión a la base de datos
-const connection = mongoose.connect(MONGO_URI);
-// conexion con la sesion de mongo
+const MONGO_URI = process.env.MONGO_URI;
+const PORT = process.env.PORT || 8080;
+
+app.use(express.static(__dirname + "public"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(
   session({
     store: MongoStore.create({
@@ -46,39 +49,37 @@ app.use(
   })
 );
 
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
-function auth(req,res,next){
-  if(req.session.rol){
-      return next()
-  }else{
-      res.send("Error")
+const environment = async () => {
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log("Base de datos conectada");
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
-connection
-  .then(() => {
-    console.log("Conectado a la base de datos");
-  })
-  .catch((err) => {
-    console.log("Error al conectar a la base de datos", err);
-  });
+environment();
 
-//Template engine
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
-
-// Middlewares
-app.use(express.static(__dirname + "/public"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-//rutas
 app.use("/api/products/", productRouter);
 app.use("/api/carts/", cartRouter);
 app.use("/api/cart/", cartProductRouter);
-app.use("/login", loginRouter);
+app.use("/", loginRouter);
 app.use("/signup", signupRouter);
-app.use("/api/session/", sessionRouter);
+app.use("/forgot", ForgotRoute);
+app.use("/api/sessions/", SessionRoute);
 
+const server = app.listen(PORT, () => {
+  console.log(`servidor escuchando desde el puerto ${PORT}!`);
+});
+
+server.on("error", (err) => {
+  console.error(err);
+});
